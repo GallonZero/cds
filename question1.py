@@ -3,12 +3,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+import re
 
 keywords = ['ipad','air','bud','apple','huawei']
 
 result = {'ipad':0,'air':0,'bud':0,'apple':0,'huawei':0}
 
-base_url = 'http://10.113.178.219/'
+base_url = 'http://baidu.com/'
 
 
 def findAllItems(driver, keyword):
@@ -22,8 +23,8 @@ def findAllItems(driver, keyword):
         try:
             title_element = child_div.find_element(By.XPATH, './div/div/a/div/strong')
             title_text = title_element.text
-            if keyword in title_text:
-                matching_div_indices.append(index + 1)  # 索引从1开始
+            if re.search(keyword, title_text, re.IGNORECASE):
+                matching_div_indices.append(index + 1)  
         except:
             continue
     
@@ -34,7 +35,8 @@ def main():
     driver.get(base_url)
     for index in range(3):
         for pageNum in range(1,17):
-            driver.get(base_url + "page/" + str(index))
+            print(pageNum)
+            driver.get(base_url + "page/" + str(pageNum))
             element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, '//*[@id="root"]/main/div/div[2]/div[1]/div/div/a/div/strong'))
             )
