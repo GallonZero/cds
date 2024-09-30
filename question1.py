@@ -9,7 +9,7 @@ keywords = ['ipad','air','bud','apple','huawei']
 
 result = {'ipad':0,'air':0,'bud':0,'apple':0,'huawei':0}
 
-base_url = 'http://baidu.com/'
+base_url = 'http://10.113.178.219/'
 
 
 def findAllItems(driver, keyword):
@@ -55,11 +55,10 @@ def main():
                 if (index <3):
                     price = sum(price_list) / len(price_list)
                     result[keywords[index]] = price
-                    continue
-                else:
-                    if(pageNum == 16):
-                        price = sum(price_list) / len(price_list)
-                        result[keywords[index]] = price
+                    break
+            if(index>2 and pageNum == 16):
+                price = sum(price_list) / len(price_list)
+                result[keywords[index]] = price
             else:
                 continue
 
