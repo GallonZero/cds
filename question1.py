@@ -33,21 +33,21 @@ def findAllItems(driver, keyword):
 def main():
     driver = webdriver.Chrome()
     driver.get(base_url)
-    for index in range(3):
+    for index in range(5):
         for pageNum in range(1,17):
-            print(pageNum)
+            if(pageNum == 1):
+                price_list = []
             driver.get(base_url + "page/" + str(pageNum))
-            element = WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, '//*[@id="root"]/main/div/div[2]/div[1]/div/div/a/div/strong'))
             )
             matching_div_indices = findAllItems(driver, keywords[index])
             if(matching_div_indices != []):
-                price_list = []
                 for divNum in matching_div_indices:
                     divXpath = f'//*[@id="root"]/main/div/div[2]/div[{divNum}]/div/div/h3'
 
                     h3_element = driver.find_element(By.XPATH, divXpath)
-                    priceNum = int(h3_element.text.replace("$", ""))
+                    priceNum = float(h3_element.text.replace("$", ""))
                     
                     price_list.append(priceNum)
                 
@@ -55,18 +55,16 @@ def main():
                 if (index <3):
                     price = sum(price_list) / len(price_list)
                     result[keywords[index]] = price
-                    return result
+                    continue
                 else:
-                    if(pageNum != 16):
-                        continue
-                    else:
+                    if(pageNum == 16):
                         price = sum(price_list) / len(price_list)
                         result[keywords[index]] = price
-                        return result
             else:
                 continue
 
 
     driver.quit()
+    return result
 
 print(main())
